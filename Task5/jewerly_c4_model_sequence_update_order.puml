@@ -1,0 +1,22 @@
+﻿ @startuml
+'https://plantuml.com/sequence-diagram
+
+title Изменение статуса заказа
+
+autonumber
+
+participant Client as Client
+participant API as API
+participant Cache as Cache
+database Database as DB
+
+Client -> API: PUT /orders/{id}
+activate API
+API -> DB: update order status
+activate DB
+DB --> API: successful store in DB
+deactivate DB
+API --> Cache: update orderId in cache
+API --> Client: return orders
+deactivate API
+@enduml

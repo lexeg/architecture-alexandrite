@@ -1,0 +1,39 @@
+﻿ @startuml
+'https://plantuml.com/sequence-diagram
+
+title Чтение заказов
+
+autonumber
+
+group cache hit
+Client -> API: GET /orders
+activate API
+API -> Cache: try get from cache
+activate Cache
+Cache --> API: return orders from cache
+deactivate Cache
+API --> Client: return orders
+deactivate API
+end
+
+autonumber stop
+autonumber
+
+database Database as DB
+
+group cache miss
+Client -> API: GET /orders
+activate API
+API -> Cache: try get from cache
+activate Cache
+Cache --> API: orders not found in cache
+deactivate Cache
+API -> DB: query orders from DB
+activate DB
+DB --> API: get orders from DB
+deactivate DB
+API -> Cache: write orders to cache
+API --> Client: return orders
+deactivate API
+end
+@enduml
